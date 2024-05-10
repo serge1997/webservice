@@ -10,12 +10,12 @@ use App\Core\App;
 use App\Models\Restaurant;
 
 
-$header = array("http" => ["Accept" => "application/json", "method" => "GET"]);
-$context = stream_context_create($header);
-$result = file_get_contents('http://127.0.0.1:8000/api/products', false, $context);
-dd($result);
+#$header = array("http" => ["Accept" => "application/json", "method" => "GET"]);
+#$context = stream_context_create($header);
+#$result = file_get_contents('https://selfservice.teegz.com/api/products', false, $context);
+#dd($result);
 
-
+$db = App::get()->resolve(Database::class);
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $method = $_SERVER['REQUEST_METHOD'];
 $router = new Router();

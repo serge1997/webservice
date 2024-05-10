@@ -2,12 +2,14 @@
 use Router\Router;
 use App\Models\Restaurant;
 use GuzzleHttp\Client;
+use App\Core\Builder\QueryBuilder;
 
-
+Restaurant::create();
 if (isMethod('POST')) {
-    $client = new Client();
-    var_dump('Caiu no api');
-   return json_encode("Web service done");
+    Restaurant::create();
+    $inputApi = file_get_contents("php://input");
+    $inputs = json_decode($inputApi, true);
+    var_dump($inputs);
 }
 
 Router::view('dashboard.view.php', [
