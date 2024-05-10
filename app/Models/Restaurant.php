@@ -13,39 +13,37 @@ class Restaurant
         private string $rest_name,
         private string $rest_email,
         private string $rest_cnpj,
-        private string $rest_city,
+        private string $res_city,
         private string $rest_neighborhood,
-        private string $rest_cep,
         private string $rest_streetName,
-        private string $rest_streetNumber,
-        private ?string $rest_logo,
+        private string $rest_StreetNumber,
         private ?string $res_open,
         private ?string $res_close,
-        private string $longitude,
-        private string $latitude,
-        private string $created_at,
-        private string $updated_at
     )
     {
         static::$db = App::get()->resolve(Database::class);
     }
     CONST TABLE = 'restaurants';
 
-    public static function create()
+    public static function create(Restaurant $restaurant)
     {
         $db = App::get()->resolve(Database::class);
         $sql = (new QueryBuilder())
             ->insert(self::TABLE, 
                 [
                     'rest_name', 
-                    'rest_email'
+                    'rest_email',
+                    'rest_cnpj',
+                    'res_city'
                 ], 
                 [
-                    'casino bar',
-                    'builder@.com'
+                    $restaurant->rest_name,
+                    $restaurant->rest_email,
+                    $restaurant->rest_cnpj,
+                    $restaurant->res_city,
                 ]
                 )->exec();
-        dd($sql);
+       
         $statement =  $db->connection->prepare($sql);
         $statement->execute();
     }

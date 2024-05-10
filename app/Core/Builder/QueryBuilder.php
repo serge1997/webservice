@@ -16,7 +16,7 @@ class QueryBuilder implements SqlQueryBuilderInterface
     {
         $this->set();
         $this->query->type = "insert";
-        $this->query->insert = "INSERT INTO $table(". implode(",",  $fields) .") VALUES(". implode(", ", $values) . ")";
+        $this->query->insert = "INSERT INTO $table(" . implode(",",  $fields) .") VALUES(". "'" . implode("','", $values) . "'" . ")";
 
         return $this;
     }
