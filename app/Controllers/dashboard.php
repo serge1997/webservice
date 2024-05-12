@@ -5,7 +5,13 @@ use App\Core\ModelsBuilder\RestaurantBuilder;
 use GuzzleHttp\Client;
 use App\Core\Builder\QueryBuilder;
 
+$select = (new QueryBuilder())
+    ->select("users", ['name', 'email'])
+        ->where('name', '=', 'serge')
+            ->where('name', '=', 'serge')
+                ->get();
 
+ var_dump($select);
 if (isMethod('POST')) {
     $inputApi = file_get_contents("php://input");
     $inputs = json_decode($inputApi, true);

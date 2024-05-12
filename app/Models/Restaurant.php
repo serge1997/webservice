@@ -14,7 +14,7 @@ class Restaurant
         private string $rest_email,
         private string $rest_cnpj,
         private string $res_city,
-        private string $rest_neighborhood,
+        private string $res_neighborhood,
         private string $rest_streetName,
         private string $rest_StreetNumber,
         private ?string $res_open,
@@ -25,6 +25,11 @@ class Restaurant
     }
     CONST TABLE = 'restaurants';
 
+    public function beforeSave(string $restaurant)
+    {
+
+    }
+    
     public static function create(Restaurant $restaurant)
     {
         $db = App::get()->resolve(Database::class);
@@ -34,16 +39,26 @@ class Restaurant
                     'rest_name', 
                     'rest_email',
                     'rest_cnpj',
-                    'res_city'
+                    'res_city',
+                    'res_neighborhood',
+                    'rest_streetName',
+                    'rest_StreetNumber',
+                    'res_open',
+                    'res_close'
+
                 ], 
                 [
                     $restaurant->rest_name,
                     $restaurant->rest_email,
                     $restaurant->rest_cnpj,
                     $restaurant->res_city,
+                    $restaurant->res_neighborhood,
+                    $restaurant->rest_streetName,
+                    $restaurant->rest_StreetNumber,
+                    $restaurant->res_open,
+                    $restaurant->res_close
                 ]
                 )->exec();
-       
         $statement =  $db->connection->prepare($sql);
         $statement->execute();
     }
