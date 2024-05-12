@@ -7,9 +7,16 @@ use App\Core\Builder\QueryBuilder;
 
 $select = (new QueryBuilder())
     ->select("users", ['name', 'email'])
-        ->where('name', '=', 'serge')
-            ->where('name', '=', 'serge')
+        ->where('name', 'like', '%serge%')
+            ->orWhere('country', '=', 'Brazil')
                 ->get();
+
+// $update = (new QueryBuilder())
+//     ->update('users', [
+//         'name' => 'Serge Gogo',
+//         'email' => 'serge@live.com',
+//         'Country' => 'Ivory coast'
+//     ]) ->where('id', '=', 4);
 
  var_dump($select);
 if (isMethod('POST')) {
