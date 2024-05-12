@@ -4,11 +4,11 @@ require_once __DIR__.'/../../public/bootstrap.php';
 use App\Core\Database;
 use App\Core\App;
 use App\Core\Builder\QueryBuilder;
-
+use InvalidArgumentException;
 
 class Restaurant
 {
-    protected static $db;
+    private $db;
     public function __construct(
         private string $rest_name,
         private string $rest_email,
@@ -21,18 +21,30 @@ class Restaurant
         private ?string $res_close,
     )
     {
-        static::$db = App::get()->resolve(Database::class);
+        $this->db = App::get()->resolve(Database::class);
     }
     CONST TABLE = 'restaurants';
 
-    public function beforeSave(string $restaurant)
+    public static function beforeSave(string $restaurant)
     {
+        $db = App::get()->resolve(Database::class);
+        $sql = (new QueryBuilder())
+            ->select(self::TABLE, ['rest_name'])
+                ->where('rest_name', '=', $restaurant)
+                    ->get();
+        $statement = $db->connection->prepare($sql);
+        $statement->execute();
+        if (!is_null($statement->fetch(\PDO::FETCH_ASSOC))) {
+            throw new \Exception("Web service error: Restaurant name already exists.", 500);
+            exit();
+        };
 
     }
-    
+
     public static function create(Restaurant $restaurant)
     {
         $db = App::get()->resolve(Database::class);
+        self::beforeSave($restaurant->rest_name);
         $sql = (new QueryBuilder())
             ->insert(self::TABLE, 
                 [
