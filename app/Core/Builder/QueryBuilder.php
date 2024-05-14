@@ -46,7 +46,11 @@ class QueryBuilder implements SqlQueryBuilderInterface
         $set = function() use ($setSynthax){
             $up = "";
             foreach ($setSynthax as $key => $value) {
-                $up .= "{$key} = '{$value}',";
+                if (count($setSynthax) == 1){
+                    $up .= "{$key} = '{$value}'";
+                }else{
+                    $up .= "{$key} = '{$value}',";
+                }
             }
             return $up;
         };
@@ -70,6 +74,13 @@ class QueryBuilder implements SqlQueryBuilderInterface
         {
             $sql .= $this->query->insert;
             return $sql;
+        }
+        if ( $this->query->type = "update" ) {
+            if (!empty($this->query->where)){
+                $sql .= $this->query->update . " WHERE ". implode(" AND ", $this->query->where);
+                return str_replace(', WHERE', ' WHERE', $sql);
+            }
+            $sql .= $this->query->update;
         }
     }
 

@@ -5,6 +5,7 @@ use App\Core\ModelsBuilder\RestaurantBuilder;
 use GuzzleHttp\Client;
 use App\Core\Builder\QueryBuilder;
 
+
 if (isMethod('POST')) {
     try{
         $inputApi = file_get_contents("php://input");
@@ -20,12 +21,17 @@ if (isMethod('POST')) {
             $inputs['res_open'],
             $inputs['res_close'],
         ))->build();
-        Restaurant::beforeSave($inputs['rest_name']);
-        Restaurant::create($restaurantBuilder);
-        echo "Web service done successfully";
-        exit();
+        if (Restaurant::beforeSave($inputs['rest_name'])){
+            Restaurant::update($restaurantBuilder);
+            echo "Teegz web service: updated successfully";
+            return;
+        }else{
+            Restaurant::create($restaurantBuilder);
+            echo "Teegz web service: Created Successfuly";
+           return;
+        }
     }catch(\Exception $e){
-        echo "(update action) ". $e->getMessage(). "," . $e->getCode();
+        echo "Web service returned an error: ". $e->getMessage();
         exit();
     }
 }

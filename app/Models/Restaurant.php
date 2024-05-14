@@ -25,7 +25,7 @@ class Restaurant
     }
     CONST TABLE = 'restaurants';
 
-    public static function beforeSave(string $restaurant)
+    public static function beforeSave(string $restaurant): bool
     {
         $db = App::get()->resolve(Database::class);
         $sql = (new QueryBuilder())
@@ -34,11 +34,10 @@ class Restaurant
                     ->get();
         $statement = $db->connection->prepare($sql);
         $statement->execute();
-        if (!is_null($statement->fetch(\PDO::FETCH_ASSOC))) {
-            throw new \Exception("Web service error: Restaurant name already exists.", 500);
-            exit();
+        if (!empty($statement->fetch(\PDO::FETCH_ASSOC))) {
+            return true;
         };
-
+        return false;
     }
 
     public static function create(Restaurant $restaurant)
@@ -71,6 +70,25 @@ class Restaurant
                     $restaurant->res_close
                 ]
                 )->exec();
+        $statement =  $db->connection->prepare($sql);
+        $statement->execute();
+    }
+    public static function update(Restaurant $restaurant)
+    {
+        $db = App::get()->resolve(Database::class);
+        $sql = (new QueryBuilder())
+            ->where('rest_name', '=', $restaurant->rest_name)
+                ->update(self::TABLE, [
+                    'rest_name' => $restaurant->rest_name,
+                    'rest_email' => $restaurant->rest_email,
+                    'rest_cnpj' => $restaurant->rest_cnpj,
+                    'res_city' => $restaurant->res_city,
+                    'res_neighborhood' => $restaurant->res_neighborhood,
+                    'rest_streetName' => $restaurant->rest_streetName,
+                    'rest_StreetNumber' => $restaurant->rest_StreetNumber,
+                    'res_open' => $restaurant->res_open,
+                    'res_close' => $restaurant->res_close
+                ])->exec();
         $statement =  $db->connection->prepare($sql);
         $statement->execute();
     }
